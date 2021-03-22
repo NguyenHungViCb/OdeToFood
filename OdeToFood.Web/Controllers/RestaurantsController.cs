@@ -49,5 +49,10 @@ namespace OdeToFood.Web.Controllers
 
             return View();
         }
+
+        public ActionResult Edit()
+        {
+            return View();
+        }
     }
 }
