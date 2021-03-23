@@ -6,6 +6,10 @@ using System.Web.Mvc;
 using OdeToFood.Data.Models;
 using OdeToFood.Data.Services;
 
+/*
+   - ModelState: A key - value pair collection that store data we send to the server including error list
+        - ModelState.isValidate use to check if the data we send match the model
+ */
 namespace OdeToFood.Web.Controllers
 {
     public class RestaurantsController : Controller
@@ -50,9 +54,27 @@ namespace OdeToFood.Web.Controllers
             return View();
         }
 
-        public ActionResult Edit()
+        [HttpGet]
+        public ActionResult Edit(int id)
         {
-            return View();
+            var model = db.Get(id);
+            if(model == null)
+            {
+                return View("NotFound");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Restaurant restaurant)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Update(restaurant);
+                return RedirectToAction("Details", new { id = restaurant.Id });
+            }
+            return View(restaurant);
         }
     }
 }
